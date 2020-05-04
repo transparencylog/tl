@@ -1,0 +1,33 @@
+before:
+  hooks:
+    # you may remove this if you don't use vgo
+    - go mod download
+build:
+  main: ./btget
+  env:
+    - CGO_ENABLED=0
+  goos:
+    - linux
+    - darwin
+    - windows
+  goarch:
+    - amd64
+    - arm
+    - arm64
+  ignore:
+    # don't build arm/arm64 for darwin or windows
+    - goos: darwin
+      goarch: arm
+    - goos: darwin
+      goarch: arm64
+    - goos: windows
+      goarch: arm
+    - goos: windows
+      goarch: arm64
+archive:
+  wrap_in_directory: true
+  name_template: "{{ .ProjectName }}-{{ .Tag }}-{{ .Os }}-{{ .Arch }}"
+checksum:
+  name_template: 'SHA256SUMS'
+snapshot:
+  name_template: "{{ .Tag }}-next"
