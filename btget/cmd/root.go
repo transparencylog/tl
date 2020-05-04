@@ -187,9 +187,12 @@ func get(cmd *cobra.Command, args []string) {
 
 	// Step 0: Initialize cache if needed
 	vkey := "sum.golang.org+033de0ae+Ac4zctda0e5eza+HJyk9SxEdh+s3Ux18htTTAD8OuAn8"
-	if _, err := note.NewVerifier(vkey); err != nil {
+	verifier, err := note.NewVerifier(vkey)
+	if err != nil {
 		log.Fatalf("invalid verifier key: %v", err)
 	}
+	verifiers := note.VerifierList(verifier)
+
 	cache := NewClientCache()
 	_, err = cache.ReadConfig("key")
 	if err == nil {
@@ -205,7 +208,12 @@ func get(cmd *cobra.Command, args []string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	os.Stdout.Write(data)
+	n, err := note.Open(data, verifiers)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Printf("%s (%08x):\n%s", n.Sigs[0].Name, n.Sigs[0].Hash, n.Text)
 
 	// create download request
 	req, err := grab.NewRequest("", durl)
