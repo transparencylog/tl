@@ -15,22 +15,31 @@
 package cmd
 
 import (
+	"bytes"
 	"crypto/sha256"
-	"errors"
+	"database/sql"
 	"fmt"
 	"io"
+	"io/ioutil"
+	"log"
+	"net/http"
+	"net/url"
 	"os"
 	"strings"
 
+	"github.com/cavaliercoder/grab"
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"golang.org/x/mod/sumdb/note"
+	_ "rsc.io/sqlite"
 
-	"github.com/cavaliercoder/grab"
-	"github.com/google/certificate-transparency-go/loglist"
+	"go.transparencylog.net/btget/sumdb"
 )
 
 var cfgFile string
+
+var serverAddr string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -57,6 +66,7 @@ func Execute() {
 }
 
 func init() {
+	serverAddr = "binary.transparencylog.net"
 	cobra.OnInitialize(initConfig)
 
 	// Here you will define your flags and configuration settings.
@@ -95,29 +105,107 @@ func initConfig() {
 	}
 }
 
-func validSCTs(valid, invalid int, cturl string, logs []loglist.Log) string {
-	var names []string
-	for _, l := range logs {
-		names = append(names, l.Description)
-	}
-	return fmt.Sprintf("validated %d/%d SCTs in logs %q ", valid, (valid + invalid), strings.Join(names, ", "))
+type clientCache struct {
+	sql *sql.DB
 }
 
-func levelSCTs(valid, invalid int) (string, error) {
-	switch {
-	case valid != 0 && invalid == 0:
-		return "OK", nil
-	case valid == 0:
-		return "Error", errors.New("no valid SCTs")
-	default:
-		return "Warning", nil
+func NewClientCache() *clientCache {
+	client := &clientCache{}
+	// TODO: make filename configurable
+	sdb, err := sql.Open("sqlite3", "btget.db")
+	if err != nil {
+		log.Fatal(err)
 	}
+	if _, err := sdb.Exec(`create table if not exists kv (k primary key, v)`); err != nil {
+		log.Fatal(err)
+	}
+	client.sql = sdb
+	return client
+}
+
+func (c *clientCache) ReadRemote(path string) ([]byte, error) {
+	resp, err := http.Get("https://" + serverAddr + path)
+	if err != nil {
+		return nil, err
+	}
+	if resp.StatusCode != 200 {
+		return nil, fmt.Errorf("http get: %v", resp.Status)
+	}
+	defer resp.Body.Close()
+	data, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
+}
+
+func (c *clientCache) ReadConfig(file string) (data []byte, err error) {
+	defer func() {
+		if err != nil {
+			err = fmt.Errorf("read config %s: %v", file, err)
+		}
+	}()
+
+	data, err = sqlRead(c.sql, "config:"+file)
+	if strings.HasSuffix(file, "/latest") && err == sql.ErrNoRows {
+		return nil, nil
+	}
+	return data, err
+}
+
+func (c *clientCache) WriteConfig(file string, old, new []byte) error {
+	if old == nil {
+		return sqlWrite(c.sql, "config:"+file, new)
+	}
+	return sqlSwap(c.sql, "config:"+file, old, new)
+}
+
+func (c *clientCache) ReadCache(file string) ([]byte, error) {
+	return sqlRead(c.sql, "file:"+file)
+}
+
+func (c *clientCache) WriteCache(file string, data []byte) {
+	sqlWrite(c.sql, "file:"+file, data)
+}
+
+func (c *clientCache) Log(msg string) {
+	log.Print(msg)
+}
+
+func (c *clientCache) SecurityError(msg string) {
+	log.Fatal(msg)
 }
 
 func get(cmd *cobra.Command, args []string) {
 	durl := args[0]
 
+	u, err := url.Parse(durl)
+	if err != nil {
+		panic(err)
+	}
+	key := u.Host + u.Path
+
+	// Step 0: Initialize cache if needed
+	vkey := "sum.golang.org+033de0ae+Ac4zctda0e5eza+HJyk9SxEdh+s3Ux18htTTAD8OuAn8"
+	if _, err := note.NewVerifier(vkey); err != nil {
+		log.Fatalf("invalid verifier key: %v", err)
+	}
+	cache := NewClientCache()
+	_, err = cache.ReadConfig("key")
+	if err == nil {
+		if err := cache.WriteConfig("key", nil, []byte(vkey)); err != nil {
+			log.Fatal(err)
+		}
+	}
+
 	// Step 1: Download the tlog entry for the URL
+	client := sumdb.NewClient(cache)
+	log.Print("looking up key: ", key)
+	_, data, err := client.Lookup(key)
+	if err != nil {
+		log.Fatal(err)
+	}
+	os.Stdout.Write(data)
 
 	// create download request
 	req, err := grab.NewRequest("", durl)
@@ -162,4 +250,38 @@ func get(cmd *cobra.Command, args []string) {
 	}
 
 	fmt.Println("Download validated and saved to", resp.Filename)
+}
+
+func sqlRead(db *sql.DB, key string) ([]byte, error) {
+	var value []byte
+	err := db.QueryRow(`select v from kv where k = ?`, key).Scan(&value)
+	if err != nil {
+		return nil, err
+	}
+	return value, nil
+}
+
+func sqlWrite(db *sql.DB, key string, value []byte) error {
+	_, err := db.Exec(`insert or replace into kv (k, v) values (?, ?)`, key, value)
+	return err
+}
+
+func sqlSwap(db *sql.DB, key string, old, value []byte) error {
+	tx, err := db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	var txOld []byte
+	if err := tx.QueryRow(`select v from kv where k = ?`, key).Scan(&txOld); err != nil {
+		return err
+	}
+	if !bytes.Equal(txOld, old) {
+		return sumdb.ErrWriteConflict
+	}
+	if _, err := tx.Exec(`insert or replace into kv (k, v) values (?, ?)`, key, value); err != nil {
+		return err
+	}
+	return tx.Commit()
 }
