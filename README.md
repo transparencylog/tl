@@ -14,7 +14,10 @@
 
 ## Installation
 
-Download the appropriate release from https://github.com/transparencylog/btget/releases and extract the archive
+```
+go get -u go.transparencylog.net/btget/btget
+$(go env GOPATH)/bin/btget
+```
 
 ## Example Usage
 
