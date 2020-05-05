@@ -18,6 +18,7 @@ import (
 	"bytes"
 	"crypto/sha256"
 	"database/sql"
+	"encoding/hex"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -25,20 +26,20 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/cavaliercoder/grab"
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"golang.org/x/mod/sumdb/note"
 	_ "rsc.io/sqlite"
 
 	"go.transparencylog.net/btget/sumdb"
 )
 
 var cfgFile string
-
+var cacheFile string
 var serverAddr string
 
 // rootCmd represents the base command when called without any subcommands
@@ -72,7 +73,7 @@ func init() {
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.btget.yaml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.config/btget/config.yaml)")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
@@ -81,21 +82,25 @@ func init() {
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
-	if cfgFile != "" {
-		// Use config file from the flag.
-		viper.SetConfigFile(cfgFile)
-	} else {
-		// Find home directory.
-		home, err := homedir.Dir()
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
-
-		// Search config in home directory with name ".btget" (without extension).
-		viper.AddConfigPath(home)
-		viper.SetConfigName(".btget")
+	// Find home directory.
+	home, err := homedir.Dir()
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
 	}
+
+	btgetDir := filepath.Join(home, ".config", "btget")
+	err = os.MkdirAll(btgetDir, 0700)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	cacheFile = filepath.Join(btgetDir, "btget.db")
+
+	// Search config in home directory with name ".btget" (without extension).
+	viper.AddConfigPath(btgetDir)
+	viper.SetConfigName("config")
 
 	viper.AutomaticEnv() // read in environment variables that match
 
@@ -111,8 +116,8 @@ type clientCache struct {
 
 func NewClientCache() *clientCache {
 	client := &clientCache{}
-	// TODO: make filename configurable
-	sdb, err := sql.Open("sqlite3", "btget.db")
+
+	sdb, err := sql.Open("sqlite3", cacheFile)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -186,16 +191,10 @@ func get(cmd *cobra.Command, args []string) {
 	key := u.Host + u.Path
 
 	// Step 0: Initialize cache if needed
-	vkey := "sum.golang.org+033de0ae+Ac4zctda0e5eza+HJyk9SxEdh+s3Ux18htTTAD8OuAn8"
-	verifier, err := note.NewVerifier(vkey)
-	if err != nil {
-		log.Fatalf("invalid verifier key: %v", err)
-	}
-	verifiers := note.VerifierList(verifier)
-
+	vkey := "log+998cdb6b+AUDa+aCu48rSILe2yaFwjrL5p3h5jUi4x4tTX0wSpeXU"
 	cache := NewClientCache()
 	_, err = cache.ReadConfig("key")
-	if err == nil {
+	if err != nil {
 		if err := cache.WriteConfig("key", nil, []byte(vkey)); err != nil {
 			log.Fatal(err)
 		}
@@ -203,17 +202,11 @@ func get(cmd *cobra.Command, args []string) {
 
 	// Step 1: Download the tlog entry for the URL
 	client := sumdb.NewClient(cache)
-	log.Print("looking up key: ", key)
 	_, data, err := client.Lookup(key)
 	if err != nil {
 		log.Fatal(err)
 	}
-	n, err := note.Open(data, verifiers)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	fmt.Printf("%s (%08x):\n%s", n.Sigs[0].Name, n.Sigs[0].Hash, n.Text)
+	logDigest := strings.Trim(string(data), "\n")
 
 	// create download request
 	req, err := grab.NewRequest("", durl)
@@ -241,7 +234,14 @@ func get(cmd *cobra.Command, args []string) {
 
 		fileSum := h.Sum(nil)
 
-		// TODO VALIDATE SUM FILE HERE
+		logSum, err := hex.DecodeString(logDigest)
+		if err != nil {
+			panic(err)
+		}
+
+		if !bytes.Equal(fileSum, logSum) {
+			log.Fatalf("file digest %x != log digest %x", fileSum, logSum)
+		}
 
 		fmt.Printf("validated file sum: %x\n", fileSum)
 
