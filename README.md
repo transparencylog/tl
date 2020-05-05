@@ -16,6 +16,7 @@
 
 ```
 git clone https://github.com/transparencylog/btget
+cd ./btget
 go build -o ~/bin/btget -mod vendor ./btget
 ~/bin/btget
 ```
