@@ -39,7 +39,7 @@ func FormatTree(tree Tree) []byte {
 }
 
 var errMalformedTree = errors.New("malformed tree note")
-var treePrefix = []byte("go.sum database tree\n")
+var treePrefix = []byte("tlog database tree\n")
 
 // ParseTree parses a formatted tree root description.
 func ParseTree(text []byte) (tree Tree, err error) {
