@@ -207,6 +207,7 @@ func get(cmd *cobra.Command, args []string) {
 		log.Fatal(err)
 	}
 	logDigest := strings.Trim(string(data), "\n")
+	fmt.Printf("fetched note: https://%s/lookup/%s\n", serverAddr, key)
 
 	// create download request
 	req, err := grab.NewRequest("", durl)
