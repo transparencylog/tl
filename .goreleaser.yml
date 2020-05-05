@@ -24,7 +24,10 @@ build:
       goarch: arm
     - goos: windows
       goarch: arm64
-archive:
+archives:
+ - 
+  builds:
+  - default
   wrap_in_directory: true
   name_template: "{{ .ProjectName }}-{{ .Tag }}-{{ .Os }}-{{ .Arch }}"
 checksum:
