@@ -15,8 +15,9 @@
 ## Installation
 
 ```
-go get -u go.transparencylog.net/btget/btget
-$(go env GOPATH)/bin/btget
+git clone https://github.com/transparencylog/btget
+go build -o ~/bin/btget -mod vendor ./btget
+~/bin/btget
 ```
 
 ## Example Usage
@@ -24,7 +25,7 @@ $(go env GOPATH)/bin/btget
 Use btget to download the v3.4.2 [etcd](https://etcd.io) release for macOS and verify that the contents are publicly recorded.
 
 ```
-btget https://github.com/etcd-io/etcd/releases/download/v3.4.2/etcd-v3.4.2-darwin-amd64.zip
+~/bin/btget https://github.com/etcd-io/etcd/releases/download/v3.4.2/etcd-v3.4.2-darwin-amd64.zip
 ```
 
 ## FAQ
