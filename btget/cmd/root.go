@@ -17,13 +17,10 @@ package cmd
 import (
 	"bytes"
 	"crypto/sha256"
-	"database/sql"
 	"encoding/hex"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
-	"net/http"
 	"net/url"
 	"os"
 	"path/filepath"
@@ -35,6 +32,7 @@ import (
 	"github.com/spf13/viper"
 	_ "rsc.io/sqlite"
 
+	"go.transparencylog.net/btget/clientcache/sqlite"
 	"go.transparencylog.net/btget/sumdb"
 )
 
@@ -110,77 +108,6 @@ func initConfig() {
 	}
 }
 
-type clientCache struct {
-	sql *sql.DB
-}
-
-func NewClientCache() *clientCache {
-	client := &clientCache{}
-
-	sdb, err := sql.Open("sqlite3", cacheFile)
-	if err != nil {
-		log.Fatal(err)
-	}
-	if _, err := sdb.Exec(`create table if not exists kv (k primary key, v)`); err != nil {
-		log.Fatal(err)
-	}
-	client.sql = sdb
-	return client
-}
-
-func (c *clientCache) ReadRemote(path string) ([]byte, error) {
-	resp, err := http.Get("https://" + serverAddr + path)
-	if err != nil {
-		return nil, err
-	}
-	if resp.StatusCode != 200 {
-		return nil, fmt.Errorf("http get: %v", resp.Status)
-	}
-	defer resp.Body.Close()
-	data, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-	return data, nil
-}
-
-func (c *clientCache) ReadConfig(file string) (data []byte, err error) {
-	defer func() {
-		if err != nil {
-			err = fmt.Errorf("read config %s: %v", file, err)
-		}
-	}()
-
-	data, err = sqlRead(c.sql, "config:"+file)
-	if strings.HasSuffix(file, "/latest") && err == sql.ErrNoRows {
-		return nil, nil
-	}
-	return data, err
-}
-
-func (c *clientCache) WriteConfig(file string, old, new []byte) error {
-	if old == nil {
-		return sqlWrite(c.sql, "config:"+file, new)
-	}
-	return sqlSwap(c.sql, "config:"+file, old, new)
-}
-
-func (c *clientCache) ReadCache(file string) ([]byte, error) {
-	return sqlRead(c.sql, "file:"+file)
-}
-
-func (c *clientCache) WriteCache(file string, data []byte) {
-	sqlWrite(c.sql, "file:"+file, data)
-}
-
-func (c *clientCache) Log(msg string) {
-	log.Print(msg)
-}
-
-func (c *clientCache) SecurityError(msg string) {
-	log.Fatal(msg)
-}
-
 func get(cmd *cobra.Command, args []string) {
 	durl := args[0]
 
@@ -192,7 +119,7 @@ func get(cmd *cobra.Command, args []string) {
 
 	// Step 0: Initialize cache if needed
 	vkey := "log+998cdb6b+AUDa+aCu48rSILe2yaFwjrL5p3h5jUi4x4tTX0wSpeXU"
-	cache := NewClientCache()
+	cache := sqlite.NewClientCache(cacheFile, serverAddr)
 	_, err = cache.ReadConfig("key")
 	if err != nil {
 		if err := cache.WriteConfig("key", nil, []byte(vkey)); err != nil {
@@ -259,38 +186,4 @@ func get(cmd *cobra.Command, args []string) {
 	}
 
 	fmt.Println("Download validated and saved to", resp.Filename)
-}
-
-func sqlRead(db *sql.DB, key string) ([]byte, error) {
-	var value []byte
-	err := db.QueryRow(`select v from kv where k = ?`, key).Scan(&value)
-	if err != nil {
-		return nil, err
-	}
-	return value, nil
-}
-
-func sqlWrite(db *sql.DB, key string, value []byte) error {
-	_, err := db.Exec(`insert or replace into kv (k, v) values (?, ?)`, key, value)
-	return err
-}
-
-func sqlSwap(db *sql.DB, key string, old, value []byte) error {
-	tx, err := db.Begin()
-	if err != nil {
-		return err
-	}
-	defer tx.Rollback()
-
-	var txOld []byte
-	if err := tx.QueryRow(`select v from kv where k = ?`, key).Scan(&txOld); err != nil {
-		return err
-	}
-	if !bytes.Equal(txOld, old) {
-		return sumdb.ErrWriteConflict
-	}
-	if _, err := tx.Exec(`insert or replace into kv (k, v) values (?, ?)`, key, value); err != nil {
-		return err
-	}
-	return tx.Commit()
 }
