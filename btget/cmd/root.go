@@ -30,9 +30,8 @@ import (
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	_ "rsc.io/sqlite"
 
-	"go.transparencylog.net/btget/clientcache/sqlite"
+	"go.transparencylog.net/btget/clientcache/bbolt"
 	"go.transparencylog.net/btget/sumdb"
 )
 
@@ -119,7 +118,7 @@ func get(cmd *cobra.Command, args []string) {
 
 	// Step 0: Initialize cache if needed
 	vkey := "log+998cdb6b+AUDa+aCu48rSILe2yaFwjrL5p3h5jUi4x4tTX0wSpeXU"
-	cache := sqlite.NewClientCache(cacheFile, serverAddr)
+	cache := bbolt.NewClientCache(cacheFile, serverAddr)
 	_, err = cache.ReadConfig("key")
 	if err != nil {
 		if err := cache.WriteConfig("key", nil, []byte(vkey)); err != nil {
