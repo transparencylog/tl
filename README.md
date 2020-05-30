@@ -14,19 +14,14 @@
 
 ## Installation
 
-```
-git clone https://github.com/transparencylog/btget
-cd ./btget
-go build -o ~/bin/btget -mod vendor ./btget
-~/bin/btget
-```
+Download the appropriate release from https://github.com/transparencylog/btget/releases and extract the archive
 
 ## Example Usage
 
 Use btget to download the v3.4.2 [etcd](https://etcd.io) release for macOS and verify that the contents are publicly recorded.
 
 ```
-~/bin/btget https://github.com/etcd-io/etcd/releases/download/v3.4.2/etcd-v3.4.2-darwin-amd64.zip
+./btget https://github.com/etcd-io/etcd/releases/download/v3.4.2/etcd-v3.4.2-darwin-amd64.zip
 ```
 
 ## FAQ
