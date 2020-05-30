@@ -4,10 +4,16 @@ before:
     - go mod download
 build:
   main: ./btget
+  env:
+    - CGO_ENABLED=0
   goos:
     - linux
+    - darwin
+    - windows
   goarch:
     - amd64
+    - arm
+    - arm64
 archives:
  - 
   builds:
