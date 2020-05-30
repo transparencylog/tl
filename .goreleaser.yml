@@ -1,26 +1,22 @@
+# This is an example goreleaser.yaml file with some sane defaults.
+# Make sure to check the documentation at http://goreleaser.com
 before:
   hooks:
-    # you may remove this if you don't use vgo
-    - go mod download
-build:
+builds:
+- env:
+  - CGO_ENABLED=0
   main: ./btget
-  env:
-    - CGO_ENABLED=0
-  goos:
-    - linux
-    - darwin
-    - windows
-  goarch:
-    - amd64
-    - arm
-    - arm64
 archives:
- - 
-  builds:
-  - default
-  wrap_in_directory: true
-  name_template: "{{ .ProjectName }}-{{ .Tag }}-{{ .Os }}-{{ .Arch }}"
+- replacements:
+    386: i386
+    amd64: x86_64
 checksum:
-  name_template: 'SHA256SUMS'
+  name_template: 'checksums.txt'
 snapshot:
   name_template: "{{ .Tag }}-next"
+changelog:
+  sort: asc
+  filters:
+    exclude:
+    - '^docs:'
+    - '^test:'
