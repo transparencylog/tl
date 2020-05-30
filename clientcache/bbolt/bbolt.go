@@ -17,17 +17,18 @@ var bucket = []byte("btget")
 var ErrNoKey = errors.New("key not set")
 
 type ClientCache struct {
-	bdb        *bolt.DB
+	cacheFile  string
 	serverAddr string
 }
 
 func NewClientCache(cacheFile string, serverAddr string) *ClientCache {
-	client := &ClientCache{serverAddr: serverAddr}
+	client := &ClientCache{cacheFile: cacheFile, serverAddr: serverAddr}
 
 	bdb, err := bolt.Open(cacheFile, 0666, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer bdb.Close()
 
 	err = bdb.Update(func(tx *bolt.Tx) error {
 		_, err := tx.CreateBucketIfNotExists(bucket)
@@ -40,7 +41,6 @@ func NewClientCache(cacheFile string, serverAddr string) *ClientCache {
 		log.Fatal(err)
 	}
 
-	client.bdb = bdb
 	return client
 }
 
@@ -69,9 +69,8 @@ func (c *ClientCache) ReadConfig(file string) (data []byte, err error) {
 		}
 	}()
 
-	data, err = bdRead(c.bdb, "config:"+file)
+	data, err = c.bdRead("config:" + file)
 	if strings.HasSuffix(file, "/latest") && err == ErrNoKey {
-		println("Hit latest check")
 		return nil, nil
 	}
 	return data, err
@@ -79,17 +78,17 @@ func (c *ClientCache) ReadConfig(file string) (data []byte, err error) {
 
 func (c *ClientCache) WriteConfig(file string, old, new []byte) error {
 	if old == nil {
-		return bdWrite(c.bdb, "config:"+file, new)
+		return c.bdWrite("config:"+file, new)
 	}
-	return bdSwap(c.bdb, "config:"+file, old, new)
+	return c.bdSwap("config:"+file, old, new)
 }
 
 func (c *ClientCache) ReadCache(file string) ([]byte, error) {
-	return bdRead(c.bdb, "file:"+file)
+	return c.bdRead("file:" + file)
 }
 
 func (c *ClientCache) WriteCache(file string, data []byte) {
-	bdWrite(c.bdb, "file:"+file, data)
+	c.bdWrite("file:"+file, data)
 }
 
 func (c *ClientCache) Log(msg string) {
@@ -100,10 +99,16 @@ func (c *ClientCache) SecurityError(msg string) {
 	log.Fatal(msg)
 }
 
-func bdRead(db *bolt.DB, key string) ([]byte, error) {
+func (c *ClientCache) bdRead(key string) ([]byte, error) {
+	bdb, err := bolt.Open(c.cacheFile, 0666, nil)
+	if err != nil {
+		return nil, err
+	}
+	defer bdb.Close()
+
 	var value []byte
 
-	err := db.View(func(tx *bolt.Tx) error {
+	err = bdb.View(func(tx *bolt.Tx) error {
 		value = tx.Bucket(bucket).Get([]byte(key))
 		if value == nil {
 			return ErrNoKey
@@ -114,8 +119,14 @@ func bdRead(db *bolt.DB, key string) ([]byte, error) {
 	return value, err
 }
 
-func bdWrite(db *bolt.DB, key string, value []byte) error {
-	return db.Update(func(tx *bolt.Tx) error {
+func (c *ClientCache) bdWrite(key string, value []byte) error {
+	bdb, err := bolt.Open(c.cacheFile, 0666, nil)
+	if err != nil {
+		return err
+	}
+	defer bdb.Close()
+
+	err = bdb.Update(func(tx *bolt.Tx) error {
 		b := tx.Bucket(bucket)
 		if err := b.Put([]byte(key), value); err != nil {
 			return err
@@ -123,11 +134,17 @@ func bdWrite(db *bolt.DB, key string, value []byte) error {
 		return nil
 	})
 
+	return err
 }
 
-func bdSwap(db *bolt.DB, key string, old, value []byte) error {
+func (c *ClientCache) bdSwap(key string, old, value []byte) error {
+	bdb, err := bolt.Open(c.cacheFile, 0666, nil)
+	if err != nil {
+		return err
+	}
+	defer bdb.Close()
 
-	return db.Update(func(tx *bolt.Tx) error {
+	err = bdb.Update(func(tx *bolt.Tx) error {
 		b := tx.Bucket(bucket)
 
 		txOld := b.Get([]byte(key))
@@ -140,4 +157,6 @@ func bdSwap(db *bolt.DB, key string, old, value []byte) error {
 		}
 		return nil
 	})
+
+	return err
 }
