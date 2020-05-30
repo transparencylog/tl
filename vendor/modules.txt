@@ -49,6 +49,9 @@ github.com/spf13/pflag
 github.com/spf13/viper
 # github.com/subosito/gotenv v1.2.0
 github.com/subosito/gotenv
+# go.etcd.io/bbolt v1.3.4
+## explicit
+go.etcd.io/bbolt
 # golang.org/x/crypto v0.0.0-20200429183012-4b2356b1ed79
 ## explicit
 golang.org/x/crypto/ed25519
