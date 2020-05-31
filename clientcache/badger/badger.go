@@ -148,7 +148,7 @@ func (c *ClientCache) bdSwap(key string, old, value []byte) error {
 		}
 
 		err = itemOld.Value(func(val []byte) error {
-			copy(txOld, val)
+			txOld = append(txOld, val...)
 			return nil
 		})
 		if err != nil {
