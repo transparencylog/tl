@@ -1,9 +1,33 @@
+# github.com/DataDog/zstd v1.4.1
+github.com/DataDog/zstd
 # github.com/cavaliercoder/grab v2.0.0+incompatible
 ## explicit
 github.com/cavaliercoder/grab
+# github.com/cespare/xxhash v1.1.0
+github.com/cespare/xxhash
+# github.com/dgraph-io/badger/v2 v2.0.3
+## explicit
+github.com/dgraph-io/badger/v2
+github.com/dgraph-io/badger/v2/options
+github.com/dgraph-io/badger/v2/pb
+github.com/dgraph-io/badger/v2/skl
+github.com/dgraph-io/badger/v2/table
+github.com/dgraph-io/badger/v2/trie
+github.com/dgraph-io/badger/v2/y
+# github.com/dgraph-io/ristretto v0.0.2-0.20200115201040-8f368f2f2ab3
+github.com/dgraph-io/ristretto
+github.com/dgraph-io/ristretto/z
+# github.com/dgryski/go-farm v0.0.0-20190423205320-6a90982ecee2
+github.com/dgryski/go-farm
+# github.com/dustin/go-humanize v1.0.0
+github.com/dustin/go-humanize
 # github.com/fsnotify/fsnotify v1.4.9
 ## explicit
 github.com/fsnotify/fsnotify
+# github.com/golang/protobuf v1.3.1
+github.com/golang/protobuf/proto
+# github.com/golang/snappy v0.0.1
+github.com/golang/snappy
 # github.com/hashicorp/hcl v1.0.0
 github.com/hashicorp/hcl
 github.com/hashicorp/hcl/hcl/ast
@@ -28,6 +52,8 @@ github.com/mitchellh/mapstructure
 # github.com/pelletier/go-toml v1.7.0
 ## explicit
 github.com/pelletier/go-toml
+# github.com/pkg/errors v0.8.1
+github.com/pkg/errors
 # github.com/spf13/afero v1.2.2
 ## explicit
 github.com/spf13/afero
@@ -60,6 +86,9 @@ golang.org/x/crypto/ed25519/internal/edwards25519
 ## explicit
 golang.org/x/mod/sumdb/note
 golang.org/x/mod/sumdb/tlog
+# golang.org/x/net v0.0.0-20190620200207-3b0461eec859
+golang.org/x/net/internal/timeseries
+golang.org/x/net/trace
 # golang.org/x/sys v0.0.0-20200501145240-bc7a7d42d5c3
 ## explicit
 golang.org/x/sys/internal/unsafeheader
