@@ -31,7 +31,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	"go.transparencylog.net/btget/clientcache/bbolt"
+	"go.transparencylog.net/btget/clientcache/badger"
 	"go.transparencylog.net/btget/sumdb"
 )
 
@@ -93,7 +93,7 @@ func initConfig() {
 		os.Exit(1)
 	}
 
-	cacheFile = filepath.Join(btgetDir, "btget.db")
+	cacheFile = filepath.Join(btgetDir, "btget.badger.db")
 
 	// Search config in home directory with name ".btget" (without extension).
 	viper.AddConfigPath(btgetDir)
@@ -118,7 +118,7 @@ func get(cmd *cobra.Command, args []string) {
 
 	// Step 0: Initialize cache if needed
 	vkey := "log+998cdb6b+AUDa+aCu48rSILe2yaFwjrL5p3h5jUi4x4tTX0wSpeXU"
-	cache := bbolt.NewClientCache(cacheFile, serverAddr)
+	cache := badger.NewClientCache(cacheFile, serverAddr)
 	_, err = cache.ReadConfig("key")
 	if err != nil {
 		if err := cache.WriteConfig("key", nil, []byte(vkey)); err != nil {
