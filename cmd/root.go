@@ -15,9 +15,8 @@
 package cmd
 
 import (
-	"bytes"
 	"crypto/sha256"
-	"encoding/hex"
+	"encoding/base64"
 	"fmt"
 	"io"
 	"log"
@@ -64,7 +63,7 @@ func Execute() {
 }
 
 func init() {
-	serverAddr = "binary.transparencylog.net"
+	serverAddr = "beta-asset.transparencylog.net"
 	cobra.OnInitialize(initConfig)
 
 	// Here you will define your flags and configuration settings.
@@ -117,7 +116,7 @@ func get(cmd *cobra.Command, args []string) {
 	key := u.Host + u.Path
 
 	// Step 0: Initialize cache if needed
-	vkey := "log+998cdb6b+AUDa+aCu48rSILe2yaFwjrL5p3h5jUi4x4tTX0wSpeXU"
+	vkey := "log+3809a75e+ARmkoBH4C+/rbs9QomTtpLJQCkzfY171BfHZLEnmA/+e"
 	cache := badger.NewClientCache(cacheFile, serverAddr)
 	_, err = cache.ReadConfig("key")
 	if err != nil {
@@ -132,7 +131,6 @@ func get(cmd *cobra.Command, args []string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	logDigest := strings.Trim(string(data), "\n")
 	fmt.Printf("fetched note: https://%s/lookup/%s\n", serverAddr, key)
 
 	// create download request
@@ -161,16 +159,17 @@ func get(cmd *cobra.Command, args []string) {
 
 		fileSum := h.Sum(nil)
 
-		logSum, err := hex.DecodeString(logDigest)
-		if err != nil {
-			panic(err)
+		want := "h1:" + base64.StdEncoding.EncodeToString(fileSum)
+		for _, line := range strings.Split(string(data), "\n") {
+			if line == want {
+				break
+			}
+			if strings.HasPrefix(line, "h1:") {
+				log.Fatalf("file digest %x != log digest %x", fileSum, line)
+			}
 		}
 
-		if !bytes.Equal(fileSum, logSum) {
-			log.Fatalf("file digest %x != log digest %x", fileSum, logSum)
-		}
-
-		fmt.Printf("validated file sum: %x\n", fileSum)
+		fmt.Printf("validated file sha256sum: %x\n", fileSum)
 
 		req.SetChecksum(sha256.New(), fileSum, true)
 
