@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"strings"
 
-	"go.transparencylog.net/btget/sumdb"
+	"go.transparencylog.net/tl/sumdb"
 	_ "rsc.io/sqlite"
 )
 

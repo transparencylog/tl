@@ -10,10 +10,10 @@ import (
 	"strings"
 
 	bolt "go.etcd.io/bbolt"
-	"go.transparencylog.net/btget/sumdb"
+	"go.transparencylog.net/tl/sumdb"
 )
 
-var bucket = []byte("btget")
+var bucket = []byte("tl")
 var ErrNoKey = errors.New("key not set")
 
 type ClientCache struct {

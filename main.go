@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package main // import "go.transparencylog.net/btget"
+package main // import "go.transparencylog.net/tl"
 
-import "go.transparencylog.net/btget/btget/cmd"
+import "go.transparencylog.net/tl/cmd"
 
 func main() {
 	cmd.Execute()

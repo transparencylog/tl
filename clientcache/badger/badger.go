@@ -11,7 +11,7 @@ import (
 
 	badger "github.com/dgraph-io/badger/v2"
 
-	"go.transparencylog.net/btget/sumdb"
+	"go.transparencylog.net/tl/sumdb"
 )
 
 var ErrNoKey = errors.New("key not set")

@@ -31,8 +31,8 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	"go.transparencylog.net/btget/clientcache/badger"
-	"go.transparencylog.net/btget/sumdb"
+	"go.transparencylog.net/tl/clientcache/badger"
+	"go.transparencylog.net/tl/sumdb"
 )
 
 var cfgFile string
@@ -41,10 +41,10 @@ var serverAddr string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "btget [URL]",
+	Use:   "tl [URL]",
 	Short: "Get a URL and verify the contents with a binary tranparency log",
-	Long: `btget is similar to other popular URL fetchers with an additional layer of security.
-By using a transparency log, that enables third-party auditing, btget gives you
+	Long: `tl is similar to other popular URL fetchers with an additional layer of security.
+By using a transparency log, that enables third-party auditing, tl gives you
 strong guarantees that the cryptographic hash digest of the binary you are
 downloading appears in a public log.
 `,
@@ -70,7 +70,7 @@ func init() {
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.config/btget/config.yaml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.config/tl/config.yaml)")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
@@ -86,17 +86,17 @@ func initConfig() {
 		os.Exit(1)
 	}
 
-	btgetDir := filepath.Join(home, ".config", "btget")
-	err = os.MkdirAll(btgetDir, 0700)
+	tlDir := filepath.Join(home, ".config", "tl")
+	err = os.MkdirAll(tlDir, 0700)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
 
-	cacheFile = filepath.Join(btgetDir, "btget.badger.db")
+	cacheFile = filepath.Join(tlDir, "tl.badger.db")
 
-	// Search config in home directory with name ".btget" (without extension).
-	viper.AddConfigPath(btgetDir)
+	// Search config in home directory with name ".tl" (without extension).
+	viper.AddConfigPath(tlDir)
 	viper.SetConfigName("config")
 
 	viper.AutomaticEnv() // read in environment variables that match

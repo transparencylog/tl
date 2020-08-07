@@ -1,4 +1,4 @@
-module go.transparencylog.net/btget
+module go.transparencylog.net/tl
 
 go 1.14
 
