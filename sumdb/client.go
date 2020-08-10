@@ -8,6 +8,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"net/url"
 	"strings"
 	"sync"
 	"sync/atomic"
@@ -26,7 +27,7 @@ type ClientOps interface {
 	// It is the implementation's responsibility to turn that path into a full URL
 	// and make the HTTP request. ReadRemote should return an error for
 	// any non-200 HTTP response status.
-	ReadRemote(path string) ([]byte, error)
+	ReadRemote(path string, query string) ([]byte, error)
 
 	// ReadConfig reads and returns the content of the named configuration file.
 	// There are only a fixed set of configuration files.
@@ -172,6 +173,15 @@ func (c *Client) SetTileHeight(height int) {
 
 // Lookup returns the record for the given key.
 func (c *Client) Lookup(key string) (id int64, data []byte, err error) {
+	return c.LookupOpts(key, LookupOpts{})
+}
+
+type LookupOpts struct {
+	Digest string
+}
+
+// LookupOpts returns the record for the given key.
+func (c *Client) LookupOpts(key string, opts LookupOpts) (id int64, data []byte, err error) {
 	atomic.StoreUint32(&c.didLookup, 1)
 
 	defer func() {
@@ -203,7 +213,9 @@ func (c *Client) Lookup(key string) (id int64, data []byte, err error) {
 		writeCache := false
 		data, err := c.ops.ReadCache(file)
 		if err != nil {
-			data, err = c.ops.ReadRemote(remotePath)
+			q := url.Values{}
+			q.Set("h", opts.Digest)
+			data, err = c.ops.ReadRemote(remotePath, q.Encode())
 			if err != nil {
 				return cached{err: err}
 			}
@@ -514,7 +526,7 @@ func (c *Client) readTile(tile tlog.Tile) ([]byte, error) {
 		}
 
 		// Try requested tile from server.
-		data, err = c.ops.ReadRemote(c.tileRemotePath(tile))
+		data, err = c.ops.ReadRemote(c.tileRemotePath(tile), "")
 		if err == nil {
 			return cached{data, nil}
 		}
@@ -524,7 +536,7 @@ func (c *Client) readTile(tile tlog.Tile) ([]byte, error) {
 		// the tile has been completed and only the complete one
 		// is available.
 		if tile != full {
-			data, err := c.ops.ReadRemote(c.tileRemotePath(full))
+			data, err := c.ops.ReadRemote(c.tileRemotePath(full), "")
 			if err == nil {
 				// Note: We could save the full tile in the on-disk cache here,
 				// but we don't know if it is valid yet, and we will only find out

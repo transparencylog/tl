@@ -36,14 +36,6 @@ func get(cmd *cobra.Command, args []string) {
 
 	cache := config.ClientCache()
 
-	// Step 1: Download the tlog entry for the URL
-	client := sumdb.NewClient(cache)
-	_, data, err := client.Lookup(key)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Printf("fetched note: https://%s/lookup/%s\n", config.ServerAddr, key)
-
 	// create download request
 	req, err := grab.NewRequest("", durl)
 	if err != nil {
@@ -70,7 +62,15 @@ func get(cmd *cobra.Command, args []string) {
 
 		fileSum := h.Sum(nil)
 
+		// Download the tlog entry for the URL
 		want := "h1:" + base64.StdEncoding.EncodeToString(fileSum)
+		client := sumdb.NewClient(cache)
+		_, data, err := client.LookupOpts(key, sumdb.LookupOpts{Digest: want})
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Printf("fetched note: https://%s/lookup/%s\n", config.ServerAddr, key)
+
 		for _, line := range strings.Split(string(data), "\n") {
 			if line == want {
 				break

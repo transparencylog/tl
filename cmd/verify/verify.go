@@ -39,14 +39,7 @@ func verify(cmd *cobra.Command, args []string) {
 	cache := config.ClientCache()
 	client := sumdb.NewClient(cache)
 
-	// Step 1: Download the tlog entry for the URL
-	_, data, err := client.Lookup(key)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Printf("fetched note: https://%s/lookup/%s\n", config.ServerAddr, key)
-
-	// Step 2: Generate sha256sum of the file
+	// Step 1: Generate sha256sum of the file
 	f, err := os.Open(args[1])
 	if err != nil {
 		log.Fatal(err)
@@ -62,6 +55,14 @@ func verify(cmd *cobra.Command, args []string) {
 	fileSum := h.Sum(nil)
 
 	want := "h1:" + base64.StdEncoding.EncodeToString(fileSum)
+
+	// Step 1: Download the tlog entry for the URL
+	_, data, err := client.LookupOpts(key, sumdb.LookupOpts{Digest: want})
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("fetched note: https://%s/lookup/%s\n", config.ServerAddr, key)
+
 	for _, line := range strings.Split(string(data), "\n") {
 		if line == want {
 			break

@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
 	"strings"
 
 	badger "github.com/dgraph-io/badger/v2"
@@ -32,10 +33,16 @@ func NewClientCache(cacheFile string, serverAddr string) *ClientCache {
 	return client
 }
 
-func (c *ClientCache) ReadRemote(path string) ([]byte, error) {
-	resp, err := http.Get("https://" + c.serverAddr + path)
+func (c *ClientCache) ReadRemote(path string, query string) ([]byte, error) {
+	u := url.URL{
+		Scheme:   "https",
+		Host:     c.serverAddr,
+		Path:     path,
+		RawQuery: query,
+	}
 
-	println("https://" + c.serverAddr + path)
+	resp, err := http.Get(u.String())
+
 	if err != nil {
 		return nil, err
 	}
