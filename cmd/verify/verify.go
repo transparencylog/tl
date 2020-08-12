@@ -61,7 +61,7 @@ func verify(cmd *cobra.Command, args []string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("fetched note: https://%s/lookup/%s\n", config.ServerAddr, key)
+	fmt.Printf("fetched note: %s/lookup/%s\n", config.ServerURL, key)
 
 	for _, line := range strings.Split(string(data), "\n") {
 		if line == want {

@@ -19,14 +19,14 @@ var ErrNoKey = errors.New("key not set")
 
 type ClientCache struct {
 	cacheFile  string
-	serverAddr string
+	serverURL  string
 	bdbOptions badger.Options
 }
 
-func NewClientCache(cacheFile string, serverAddr string) *ClientCache {
+func NewClientCache(cacheFile string, serverURL string) *ClientCache {
 	client := &ClientCache{
 		cacheFile:  cacheFile,
-		serverAddr: serverAddr,
+		serverURL:  serverURL,
 		bdbOptions: badger.DefaultOptions(cacheFile).WithLogger(nil),
 	}
 
@@ -34,15 +34,14 @@ func NewClientCache(cacheFile string, serverAddr string) *ClientCache {
 }
 
 func (c *ClientCache) ReadRemote(path string, query string) ([]byte, error) {
-	u := url.URL{
-		Scheme:   "https",
-		Host:     c.serverAddr,
-		Path:     path,
-		RawQuery: query,
+	u, err := url.Parse(c.serverURL)
+	if err != nil {
+		log.Fatalf("ReadRemote: %v", err)
 	}
+	u.Path = path
+	u.RawQuery = query
 
 	resp, err := http.Get(u.String())
-
 	if err != nil {
 		return nil, err
 	}

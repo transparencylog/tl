@@ -10,10 +10,21 @@ import (
 	"go.transparencylog.net/tl/clientcache/badger"
 )
 
-const ServerAddr string = "beta-asset.transparencylog.net"
-const ServerKey string = "log+3809a75e+ARmkoBH4C+/rbs9QomTtpLJQCkzfY171BfHZLEnmA/+e"
+var ServerURL string = "https://beta-asset.transparencylog.net"
+var ServerKey string = "log+3809a75e+ARmkoBH4C+/rbs9QomTtpLJQCkzfY171BfHZLEnmA/+e"
 
-// ClientCache returns an initialized ClientCache using ServerAddr and ServerKey
+func init() {
+	s := os.Getenv("TL_DEBUG_SERVERURL")
+	if s != "" {
+		ServerURL = s
+	}
+	s = os.Getenv("TL_DEBUG_SERVERKEY")
+	if s != "" {
+		ServerKey = s
+	}
+}
+
+// ClientCache returns an initialized ClientCache using ServerURL and ServerKey
 func ClientCache() *badger.ClientCache {
 	home, err := homedir.Dir()
 	if err != nil {
@@ -31,7 +42,7 @@ func ClientCache() *badger.ClientCache {
 	cacheFile := filepath.Join(tlDir, "tl.badger.db")
 
 	// Initialize cache DB, if necessary
-	cache := badger.NewClientCache(cacheFile, ServerAddr)
+	cache := badger.NewClientCache(cacheFile, ServerURL)
 	_, err = cache.ReadConfig("key")
 	if err != nil {
 		if err := cache.WriteConfig("key", nil, []byte(ServerKey)); err != nil {
