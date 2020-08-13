@@ -23,61 +23,37 @@ github.com/dgryski/go-farm
 github.com/dustin/go-humanize
 # github.com/fsnotify/fsnotify v1.4.9
 ## explicit
-github.com/fsnotify/fsnotify
 # github.com/golang/protobuf v1.3.1
 github.com/golang/protobuf/proto
 # github.com/golang/snappy v0.0.1
 github.com/golang/snappy
-# github.com/hashicorp/hcl v1.0.0
-github.com/hashicorp/hcl
-github.com/hashicorp/hcl/hcl/ast
-github.com/hashicorp/hcl/hcl/parser
-github.com/hashicorp/hcl/hcl/printer
-github.com/hashicorp/hcl/hcl/scanner
-github.com/hashicorp/hcl/hcl/strconv
-github.com/hashicorp/hcl/hcl/token
-github.com/hashicorp/hcl/json/parser
-github.com/hashicorp/hcl/json/scanner
-github.com/hashicorp/hcl/json/token
 # github.com/inconshreveable/mousetrap v1.0.0
 github.com/inconshreveable/mousetrap
-# github.com/magiconair/properties v1.8.1
-github.com/magiconair/properties
 # github.com/mitchellh/go-homedir v1.1.0
 ## explicit
 github.com/mitchellh/go-homedir
 # github.com/mitchellh/mapstructure v1.3.0
 ## explicit
-github.com/mitchellh/mapstructure
 # github.com/pelletier/go-toml v1.7.0
 ## explicit
-github.com/pelletier/go-toml
 # github.com/pkg/errors v0.8.1
 github.com/pkg/errors
 # github.com/spf13/afero v1.2.2
 ## explicit
-github.com/spf13/afero
-github.com/spf13/afero/mem
 # github.com/spf13/cast v1.3.1
 ## explicit
-github.com/spf13/cast
 # github.com/spf13/cobra v1.0.0
 ## explicit
 github.com/spf13/cobra
 # github.com/spf13/jwalterweatherman v1.1.0
 ## explicit
-github.com/spf13/jwalterweatherman
 # github.com/spf13/pflag v1.0.5
 ## explicit
 github.com/spf13/pflag
 # github.com/spf13/viper v1.6.3
 ## explicit
-github.com/spf13/viper
-# github.com/subosito/gotenv v1.2.0
-github.com/subosito/gotenv
 # go.etcd.io/bbolt v1.3.4
 ## explicit
-go.etcd.io/bbolt
 # golang.org/x/crypto v0.0.0-20200429183012-4b2356b1ed79
 ## explicit
 golang.org/x/crypto/ed25519
@@ -95,13 +71,7 @@ golang.org/x/sys/internal/unsafeheader
 golang.org/x/sys/unix
 # golang.org/x/text v0.3.2
 ## explicit
-golang.org/x/text/transform
-golang.org/x/text/unicode/norm
 # gopkg.in/ini.v1 v1.55.0
 ## explicit
-gopkg.in/ini.v1
-# gopkg.in/yaml.v2 v2.2.8
-gopkg.in/yaml.v2
 # rsc.io/sqlite v1.0.0
 ## explicit
-rsc.io/sqlite
