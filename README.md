@@ -20,17 +20,17 @@ Download the appropriate release from https://github.com/transparencylog/tl/rele
 
 ## Example Usage
 
-Use tl to download the v3.4.2 [etcd](https://etcd.io) release for macOS and verify that the contents are publicly recorded.
+Use tl to download the v5.8 Linux source code and verify that the contents are publicly recorded.
 
 ```
-./tl get https://github.com/etcd-io/etcd/releases/download/v3.4.2/etcd-v3.4.2-darwin-amd64.zip
+./tl get https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.8.tar.xz
 ```
 
 Or if you prefer to download using a familiar tool, say curl:
 
 ```
-URL=https://github.com/etcd-io/etcd/releases/download/v3.4.2/etcd-v3.4.2-darwin-amd64.zip
-FILE=etcd-v3.4.2-darwin-amd64.zip 
+URL=https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.8.tar.xz
+FILE=linux-5.8.tar.xz
 
 curl -L $URL -o $FILE
 ./tl verify $URL $FILE
