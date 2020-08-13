@@ -34,6 +34,12 @@ curl -L $URL -o $FILE
 ./tl verify $URL $FILE
 ```
 
+tl also implements a cat subcommand for doing things like installing from a shell script:
+
+```
+tl cat https://raw.githubusercontent.com/Homebrew/install/master/install.sh | bash
+```
+
 ## FAQ
 
 If you have a question that isn't answered here please [open an issue](https://github.com/transparencylog/tl/issues/new). 
