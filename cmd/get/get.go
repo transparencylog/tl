@@ -43,6 +43,7 @@ func get(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 	req.NoCreateDirectories = true
+	req.SkipExisting = true
 
 	req.AfterCopy = func(resp *grab.Response) (err error) {
 		var f *os.File
