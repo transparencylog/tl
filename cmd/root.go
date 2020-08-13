@@ -19,6 +19,7 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+	"go.transparencylog.net/tl/cmd/cat"
 	"go.transparencylog.net/tl/cmd/get"
 	"go.transparencylog.net/tl/cmd/verify"
 )
@@ -37,6 +38,7 @@ a public immutable log.`,
 func init() {
 	rootCmd.AddCommand(get.GetCmd)
 	rootCmd.AddCommand(verify.VerifyCmd)
+	rootCmd.AddCommand(cat.CatCmd)
 }
 
 func Execute() {
