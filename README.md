@@ -4,7 +4,9 @@
 
 **Alpha Warning**: tl works as described but has minimal testing, no peer review, and no load testing. Please test the tool and provide feedback.
 
-`tl` downloads URLs and verifies the contents against a publicly recorded cryptographic log. The public log gives users of tl a number of useful properties:
+`tl` verifies the contents of URLs against a publicly recorded cryptographic log. `tl is flexible and can download, print, or verify existing files.
+
+The public log gives users of tl a number of useful properties:
 
 - Verifiability of a downloaded URL's contents being identical to what the rest of the world sees
 - Searchability of recorded content changes of a URL
