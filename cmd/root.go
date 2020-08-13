@@ -22,6 +22,7 @@ import (
 	"go.transparencylog.net/tl/cmd/cat"
 	"go.transparencylog.net/tl/cmd/get"
 	"go.transparencylog.net/tl/cmd/verify"
+	"go.transparencylog.net/tl/cmd/version"
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -39,6 +40,7 @@ func init() {
 	rootCmd.AddCommand(get.GetCmd)
 	rootCmd.AddCommand(verify.VerifyCmd)
 	rootCmd.AddCommand(cat.CatCmd)
+	rootCmd.AddCommand(version.Cmd)
 }
 
 func Execute() {

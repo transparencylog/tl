@@ -14,8 +14,21 @@
 
 package main // import "go.transparencylog.net/tl"
 
-import "go.transparencylog.net/tl/cmd"
+import (
+	"go.transparencylog.net/tl/cmd"
+	"go.transparencylog.net/tl/config"
+)
+
+var (
+	version = "dev"
+	commit  = "none"
+	date    = "unknown"
+)
 
 func main() {
+	config.Version = version
+	config.Commit = commit
+	config.Date = date
+
 	cmd.Execute()
 }

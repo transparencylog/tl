@@ -10,6 +10,10 @@ import (
 	"go.transparencylog.net/tl/clientcache/badger"
 )
 
+var Version string
+var Commit string
+var Date string
+
 var ServerURL string = "https://beta-asset.transparencylog.net"
 var ServerKey string = "log+3809a75e+ARmkoBH4C+/rbs9QomTtpLJQCkzfY171BfHZLEnmA/+e"
 
