@@ -3,7 +3,7 @@ module go.transparencylog.net/tl
 go 1.14
 
 require (
-	github.com/cavaliercoder/grab v2.0.0+incompatible
+	github.com/cavaliercoder/grab v1.0.1-0.20200703095818-d3334b8f122d
 	github.com/dgraph-io/badger/v2 v2.0.3
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/spf13/cobra v1.0.0

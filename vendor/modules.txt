@@ -1,8 +1,9 @@
 # github.com/DataDog/zstd v1.4.1
 github.com/DataDog/zstd
-# github.com/cavaliercoder/grab v2.0.0+incompatible
+# github.com/cavaliercoder/grab v1.0.1-0.20200703095818-d3334b8f122d
 ## explicit
 github.com/cavaliercoder/grab
+github.com/cavaliercoder/grab/bps
 # github.com/cespare/xxhash v1.1.0
 github.com/cespare/xxhash
 # github.com/dgraph-io/badger/v2 v2.0.3
@@ -21,8 +22,6 @@ github.com/dgraph-io/ristretto/z
 github.com/dgryski/go-farm
 # github.com/dustin/go-humanize v1.0.0
 github.com/dustin/go-humanize
-# github.com/fsnotify/fsnotify v1.4.9
-## explicit
 # github.com/golang/protobuf v1.3.1
 github.com/golang/protobuf/proto
 # github.com/golang/snappy v0.0.1
@@ -32,28 +31,14 @@ github.com/inconshreveable/mousetrap
 # github.com/mitchellh/go-homedir v1.1.0
 ## explicit
 github.com/mitchellh/go-homedir
-# github.com/mitchellh/mapstructure v1.3.0
-## explicit
-# github.com/pelletier/go-toml v1.7.0
-## explicit
 # github.com/pkg/errors v0.8.1
 github.com/pkg/errors
-# github.com/spf13/afero v1.2.2
-## explicit
-# github.com/spf13/cast v1.3.1
-## explicit
 # github.com/spf13/cobra v1.0.0
 ## explicit
 github.com/spf13/cobra
-# github.com/spf13/jwalterweatherman v1.1.0
-## explicit
 # github.com/spf13/pflag v1.0.5
 ## explicit
 github.com/spf13/pflag
-# github.com/spf13/viper v1.6.3
-## explicit
-# go.etcd.io/bbolt v1.3.4
-## explicit
 # golang.org/x/crypto v0.0.0-20200429183012-4b2356b1ed79
 ## explicit
 golang.org/x/crypto/ed25519
@@ -69,9 +54,5 @@ golang.org/x/net/trace
 ## explicit
 golang.org/x/sys/internal/unsafeheader
 golang.org/x/sys/unix
-# golang.org/x/text v0.3.2
-## explicit
-# gopkg.in/ini.v1 v1.55.0
-## explicit
-# rsc.io/sqlite v1.0.0
+# gopkg.in/yaml.v2 v2.2.8
 ## explicit
