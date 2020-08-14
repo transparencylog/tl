@@ -63,3 +63,6 @@ If you have a question that isn't answered here please [open an issue](https://g
 
 - **Q**: What happens if a URLs contents are modified?
 - **A**: URLs whos contents will change aren't a good use case for fetching via tl. The first contents the service sees for a URL will be the contents that are stored forever.
+
+- **Q**: Could this be integrated into curl/wget/Chrome/Firefox/etc?
+- **A**: Absolutely! Building asset transparency was a bit of a chicken or the egg issue: both the asset transparency log service and the clients needed to be built. Our hope is that our experiments with `tl` will be so successful that browsers, software auto-updaters, and command line tools will natively integrate with it. Maybe one day OSes will even offer asset transparency as a first class subsystem alongside certificates today!
