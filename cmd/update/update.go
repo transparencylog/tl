@@ -40,16 +40,16 @@ func update(cmd *cobra.Command, args []string) {
 	switch {
 	case err == equinox.NotAvailableErr:
 		fmt.Println("No update available, already at the latest version!")
-		log.Fatalf("%v", err)
+		return
 	case err != nil:
 		fmt.Println("Update failed:", err)
-		log.Fatalf("%v", err)
+		return
 	}
 
 	// fetch the update and apply it
 	err = resp.Apply()
 	if err != nil {
-		log.Fatalf("%v", err)
+		log.Fatalf("update failed: %v", err)
 	}
 
 	fmt.Printf("Updated to new version: %s!\n", resp.ReleaseVersion)
