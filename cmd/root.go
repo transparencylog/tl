@@ -21,6 +21,7 @@ import (
 	"github.com/spf13/cobra"
 	"go.transparencylog.net/tl/cmd/cat"
 	"go.transparencylog.net/tl/cmd/get"
+	"go.transparencylog.net/tl/cmd/update"
 	"go.transparencylog.net/tl/cmd/verify"
 	"go.transparencylog.net/tl/cmd/version"
 )
@@ -41,6 +42,7 @@ func init() {
 	rootCmd.AddCommand(verify.VerifyCmd)
 	rootCmd.AddCommand(cat.CatCmd)
 	rootCmd.AddCommand(version.Cmd)
+	rootCmd.AddCommand(update.Cmd)
 }
 
 func Execute() {
