@@ -1,7 +1,9 @@
-equinox release \
+echo equinox release \
   --version=$(git describe --tags) \
-  --platforms="darwin_amd64 darwin_arm64 linux_arm linux_arm64 linux_amd64 windows_amd64 windows_arm64" \
+  --platforms=\"darwin_amd64 linux_arm linux_arm64 linux_amd64 windows_amd64\" \
   --signing-key=${EQUINOX_KEY} \
   --app="app_gCwJN1DfmYU" \
   --token="${EQUINOX_TOKEN}" \
+  --  \
+  -ldflags \"-X main.version=$(git describe --tags) -X main.date=$(date +%Y-%m-%d) -X main.commit=$(git rev-parse HEAD)\" \
   go.transparencylog.net/tl
