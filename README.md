@@ -12,7 +12,7 @@ The public log gives users of tl a number of useful properties:
 - Searchability of recorded content changes of a URL
 - Notifications to any interested party about changes to the URLs contents
 
-`tl` relies on a public webservice, hosted at binary.tranparencylog.net, which keeps an append only log of the cryptographic digests of all URLs it has seen. If a URL has not been seen before the service downloads the URL and stores a cryptographic digest of those contents in the log. The `tl` tool will then download the digest from the service and verify this digest matches the contents of the files the user retrieved.
+`tl` relies on a public webservice, hosted at beta-asset.tranparencylog.net, which keeps an append only log of the cryptographic digests of all URLs it has seen. If a URL has not been seen before the service downloads the URL and stores a cryptographic digest of those contents in the log. The `tl` tool will then download the digest from the service and verify this digest matches the contents of the files the user retrieved.
 
 ## Installation
 
