@@ -42,8 +42,8 @@ curl -L $URL -o $FILE
 tl cat https://raw.githubusercontent.com/Homebrew/install/master/install.sh | bash
 ```
 
-## FAQ
+## Frequently Asked Questions (FAQ)
 
-See the [FAQ](https://www.transparencylog.com/frequently-asked-questions/) for
-answers to questions like: Why not use blockchain? Does this replace GPG? What
+The [FAQ](https://www.transparencylog.com/frequently-asked-questions/) 
+covers topics like: Why not use blockchain? Does this replace GPG? What
 attacks could this mitigate?
