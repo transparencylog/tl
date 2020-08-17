@@ -4,9 +4,9 @@
 
 **Alpha Warning**: tl works as described but has minimal testing, no peer review, and no load testing. Please test the tool and provide feedback.
 
-`tl` verifies the contents of URLs against a publicly recorded cryptographic log. `tl is flexible and can download, print, or verify existing files.
+`tl` verifies the contents of URLs against a publicly recorded cryptographic log. `tl` is flexible and can download, print, or verify existing files.
 
-The public log gives users of tl a number of useful properties:
+The asset transparency log gives users of `tl` a number of useful properties:
 
 - Verifiability of a downloaded URL's contents being identical to what the rest of the world sees
 - Searchability of recorded content changes of a URL
@@ -20,7 +20,7 @@ Download the appropriate release from https://github.com/transparencylog/tl/rele
 
 ## Example Usage
 
-Use tl to download the v5.8 Linux source code and verify that the contents are publicly recorded.
+Use `tl` to download the v5.8 Linux source code and verify that the contents are publicly recorded.
 
 ```
 ./tl get https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.8.tar.xz
@@ -36,7 +36,7 @@ curl -L $URL -o $FILE
 ./tl verify $URL $FILE
 ```
 
-tl also implements a cat subcommand for doing things like installing from a shell script:
+`tl` also implements a cat subcommand for doing things like installing from a shell script:
 
 ```
 tl cat https://raw.githubusercontent.com/Homebrew/install/master/install.sh | bash
