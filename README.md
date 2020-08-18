@@ -20,6 +20,13 @@ Download the appropriate release for macOS, Windows, and Linux from https://gith
 
 Linux users can optionally use [.deb and .rpm](https://dl.equinox.io/transparencylog/tl/stable) packages.
 
+macOS homebrew users can optionally use brew.
+
+```
+brew tap eqnxio/transparencylog
+brew install tl
+```
+
 ## Example Usage
 
 Use `tl` to download the v5.8 Linux source code and verify that the contents are publicly recorded.
