@@ -1,5 +1,6 @@
+ # sed to fix https://github.com/transparencylog/tl/issues/18
 echo equinox release \
-  --version=$(git describe --tags) \
+  --version=$(git describe --tags | sed -E 's%^v(.*)%\1%g') \
   --platforms=\"darwin_amd64 linux_arm linux_arm64 linux_amd64 windows_amd64\" \
   --signing-key=${EQUINOX_KEY} \
   --app="app_gCwJN1DfmYU" \
