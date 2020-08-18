@@ -1,0 +1,43 @@
+#!/bin/bash -e
+
+ATL_URL="https://beta-asset.transparencylog.net/lookup/"
+
+url=$1
+file=$2
+
+if [ $# -ne 2 ]; then
+	>&2 echo "usage: asset-transparency-lookup-verify [URL] [/path/to/file]"
+	>&2 echo ""
+	>&2 echo "make a lookup request against the asset transparency log and"
+	>&2 echo "verify the log entry for the URL matches the digest of the file"
+	>&2 echo ""
+	>&2 echo "NOTE: this does not do any signature or tree validation and is"
+	>&2 echo "intended for use in release systems wanting to verify an asset"
+	>&2 echo "URL is serving the expected result to the asset transparency"
+	>&2 echo "log service."
+	exit 1
+fi
+
+digest=h1:$(openssl dgst -sha256 -binary $file | base64)
+slug=$(echo -n "$url" | sed -E "s%https://(.*)%\1%g")
+
+verified=0
+while read -r line; do
+	if [ z"${digest}" = z"${line}" ]; then
+		echo "digest matched $file and $url: ${digest}"
+		verified=1
+		break
+	fi
+
+	if [ z"tlog database tree" = z"${line}" ]; then
+		echo "read end of note without matching digest"
+		break
+	fi
+done < <(curl -s "${ATL_URL}${slug}")
+
+if [ $verified -eq 0 ]; then
+	echo failed verification
+	exit 1
+fi
+
+exit 0
