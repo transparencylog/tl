@@ -16,7 +16,9 @@ The asset transparency log gives users of `tl` a number of useful properties:
 
 ## Installation
 
-Download the appropriate release from https://github.com/transparencylog/tl/releases and extract the archive
+Download the appropriate release for macOS, Windows, and Linux from https://github.com/transparencylog/tl/releases and extract the archive.
+
+Linux users can optionally use [.deb and .rpm](https://dl.equinox.io/transparencylog/tl/stable) packages.
 
 ## Example Usage
 
