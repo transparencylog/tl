@@ -5,8 +5,8 @@ directory on the host machine.
 
 ```
 docker run \
-	quay.io/transparencylog/tl:latest \
 	--mount type=bind,source=$PWD,target=/mnt \
+	quay.io/transparencylog/tl:latest \
 	/tl verify https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.1.tar.xz /mnt/linux-5.1.tar.xz
 ```
 
