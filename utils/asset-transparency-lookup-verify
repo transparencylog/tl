@@ -33,7 +33,7 @@ while read -r line; do
 		echo "read end of note without matching digest"
 		break
 	fi
-done < <(curl -s "${ATL_URL}${slug}")
+done < <(curl -s -G -d "h=${digest}" "${ATL_URL}${slug}")
 
 if [ $verified -eq 0 ]; then
 	echo failed verification
