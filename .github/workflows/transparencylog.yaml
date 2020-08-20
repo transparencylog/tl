@@ -1,3 +1,5 @@
+name: Asset Transparency Log
+
 on:
   release:
     types: [published, created, edited, released]
