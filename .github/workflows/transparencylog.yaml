@@ -11,7 +11,7 @@ jobs:
     steps:
     - name: Gather URLs from GitHub release and publish
       id: asset-transparency
-      uses: transparencylog/github-releases-asset-transparency-verify-action@v6
+      uses: transparencylog/github-releases-asset-transparency-verify-action@v11
     - name: List verified and published URLs
       run: echo "Verified URLs ${{ steps.asset-transparency.outputs.verified }}"
     - name: List failed URLs
