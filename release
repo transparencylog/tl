@@ -7,4 +7,4 @@ echo equinox release \
   --token="${EQUINOX_TOKEN}" \
   --  \
   -ldflags \"-X main.version=$(git describe --tags) -X main.date=$(date +%Y-%m-%d) -X main.commit=$(git rev-parse HEAD)\" \
-  go.transparencylog.net/tl
+  go.transparencylog.com/tl

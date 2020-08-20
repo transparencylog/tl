@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package main // import "go.transparencylog.net/tl"
+package main // import "go.transparencylog.com/tl"
 
 import (
-	"go.transparencylog.net/tl/cmd"
-	"go.transparencylog.net/tl/config"
+	"go.transparencylog.com/tl/cmd"
+	"go.transparencylog.com/tl/config"
 )
 
 var (

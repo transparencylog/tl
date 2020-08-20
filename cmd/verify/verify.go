@@ -11,8 +11,8 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
-	"go.transparencylog.net/tl/config"
-	"go.transparencylog.net/tl/sumdb"
+	"go.transparencylog.com/tl/config"
+	"go.transparencylog.com/tl/sumdb"
 )
 
 var VerifyCmd = &cobra.Command{

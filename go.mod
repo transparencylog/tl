@@ -1,4 +1,4 @@
-module go.transparencylog.net/tl
+module go.transparencylog.com/tl
 
 go 1.14
 

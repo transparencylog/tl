@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 
 	"github.com/mitchellh/go-homedir"
-	"go.transparencylog.net/tl/clientcache/badger"
+	"go.transparencylog.com/tl/clientcache/badger"
 )
 
 var Version string

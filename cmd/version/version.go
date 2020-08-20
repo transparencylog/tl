@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"go.transparencylog.net/tl/config"
+	"go.transparencylog.com/tl/config"
 )
 
 var Cmd = &cobra.Command{

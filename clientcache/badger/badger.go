@@ -12,7 +12,7 @@ import (
 
 	badger "github.com/dgraph-io/badger/v2"
 
-	"go.transparencylog.net/tl/sumdb"
+	"go.transparencylog.com/tl/sumdb"
 )
 
 var ErrNoKey = errors.New("key not set")

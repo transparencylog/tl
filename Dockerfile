@@ -1,7 +1,7 @@
 # Start by building the application.
 FROM golang:1.14 as build
 
-WORKDIR /go/src/go.transparencylog.net/tl
+WORKDIR /go/src/go.transparencylog.com/tl
 COPY . .
 
 ENV GO111MODULE=on

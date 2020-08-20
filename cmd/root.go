@@ -19,11 +19,11 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
-	"go.transparencylog.net/tl/cmd/cat"
-	"go.transparencylog.net/tl/cmd/get"
-	"go.transparencylog.net/tl/cmd/update"
-	"go.transparencylog.net/tl/cmd/verify"
-	"go.transparencylog.net/tl/cmd/version"
+	"go.transparencylog.com/tl/cmd/cat"
+	"go.transparencylog.com/tl/cmd/get"
+	"go.transparencylog.com/tl/cmd/update"
+	"go.transparencylog.com/tl/cmd/verify"
+	"go.transparencylog.com/tl/cmd/version"
 )
 
 // rootCmd represents the base command when called without any subcommands
