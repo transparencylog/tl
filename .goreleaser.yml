@@ -27,3 +27,10 @@ changelog:
     exclude:
     - '^docs:'
     - '^test:'
+brews:
+- github:
+    owner: transparencylog
+    name: homebrew-tap
+  homepage: "https://www.transparencylog.com/"
+  folder: Formula
+  description: "verify https assets with a public transparency log"
