@@ -29,8 +29,8 @@ changelog:
     - '^test:'
 brews:
 - github:
-    owner: equinox
-    name: homebrew-transparencylog
+    owner: transparencylog
+    name: homebrew-tap
   homepage: "https://www.transparencylog.com/"
   folder: Formula
   description: "verify https assets with a public transparency log"
