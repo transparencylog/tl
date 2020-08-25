@@ -111,38 +111,36 @@ func TestClientFork(t *testing.T) {
 	_, _, err := tc2.client.Lookup("rsc.io/pkg1@v1.5.2")
 	tc2.mustError(err, ErrSecurity.Error())
 
-	/*
-	   SECURITY ERROR
-	   go.sum database server misbehavior detected!
+	_ = `SECURITY ERROR
+go.sum database server misbehavior detected!
 
-	   old database:
-	   	go.sum database tree!
-	   	5
-	   	nWzN20+pwMt62p7jbv1/NlN95ePTlHijabv5zO/s36w=
-
-	   	— localhost.localdev/sumdb AAAMZ5/2FVAdMH58kmnz/0h299pwyskEbzDzoa2/YaPdhvLya4YWDFQQxu2TQb5GpwAH4NdWnTwuhILafisyf3CNbgg=
-
-	   new database:
-	   	go.sum database tree
-	   	6
-	   	wc4SkQt52o5W2nQ8To2ARs+mWuUJjss+sdleoiqxMmM=
-
-	   	— localhost.localdev/sumdb AAAMZ6oRNswlEZ6ZZhxrCvgl1MBy+nusq4JU+TG6Fe2NihWLqOzb+y2c2kzRLoCr4tvw9o36ucQEnhc20e4nA4Qc/wc=
-
-	   proof of misbehavior:
-	   	T7i+H/8ER4nXOiw4Bj0koZOkGjkxoNvlI34GpvhHhQg=
-	   	Nsuejv72de9hYNM5bqFv8rv3gm3zJQwv/DT/WNbLDLA=
-	   	mOmqqZ1aI/lzS94oq/JSbj7pD8Rv9S+xDyi12BtVSHo=
-	   	/7Aw5jVSMM9sFjQhaMg+iiDYPMk6decH7QLOGrL9Lx0=
-	*/
+old database:
+	tlog database tree
+	5
+	nWzN20+pwMt62p7jbv1/NlN95ePTlHijabv5zO/s36w=
+	
+	— localhost.localdev/sumdb AAAMZ8mhaZhIucSHL2GcKt/1bEWU1zIdO2ZSTOUaNz/jkAnog4ke2onxKU4sR43C/kQVr42aUk+cv+KChtSMdTmHHQ4=
+	
+new database:
+	tlog database tree
+	6
+	wc4SkQt52o5W2nQ8To2ARs+mWuUJjss+sdleoiqxMmM=
+	
+	— localhost.localdev/sumdb AAAMZzhJdtGYa0J/ZYpi/BlpWFUoWjxuhG/9RBPt7v6nniS6CeDyOwPjPefeX90UXyrsto2/q2Olu1CYdH6tgDxxEgM=
+	
+proof of misbehavior:
+	T7i+H/8ER4nXOiw4Bj0koZOkGjkxoNvlI34GpvhHhQg=
+	Nsuejv72de9hYNM5bqFv8rv3gm3zJQwv/DT/WNbLDLA=
+	mOmqqZ1aI/lzS94oq/JSbj7pD8Rv9S+xDyi12BtVSHo=
+	/7Aw5jVSMM9sFjQhaMg+iiDYPMk6decH7QLOGrL9Lx0=`
 
 	wants := []string{
 		"SECURITY ERROR",
 		"go.sum database server misbehavior detected!",
-		"old database:\n\tgo.sum database tree\n\t5\n",
-		"— localhost.localdev/sumdb AAAMZ5/2FVAd",
-		"new database:\n\tgo.sum database tree\n\t6\n",
-		"— localhost.localdev/sumdb AAAMZ6oRNswl",
+		"old database:\n\ttlog database tree\n\t5\n",
+		"— localhost.localdev/sumdb AAAMZ8mhaZhI",
+		"new database:\n\ttlog database tree\n\t6\n",
+		"— localhost.localdev/sumdb AAAMZzhJdtGY",
 		"proof of misbehavior:\n\tT7i+H/8ER4nXOiw4Bj0k",
 	}
 	text := tc2.security.String()
@@ -349,7 +347,7 @@ func (tc *testClient) signTree(size int64) []byte {
 }
 
 // ReadRemote is for tc's implementation of Client.
-func (tc *testClient) ReadRemote(path string) ([]byte, error) {
+func (tc *testClient) ReadRemote(path string, query string) ([]byte, error) {
 	// No mutex here because only the Client should be running
 	// and the Client cannot change tc.get.
 	if !tc.getOK {
