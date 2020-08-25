@@ -4,7 +4,7 @@
 
 // Package sumdb implements the HTTP protocols for serving or accessing
 // a generalized checksum database. This package is forked from
-// golang.org/x/mod/sumdb.
+// go.transparencylog.com/mod/sumdb.
 package sumdb
 
 import (
@@ -14,7 +14,7 @@ import (
 	"regexp"
 	"strings"
 
-	"golang.org/x/mod/sumdb/tlog"
+	"go.transparencylog.com/mod/sumdb/tlog"
 )
 
 // A ServerOps provides the external operations

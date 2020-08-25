@@ -24,7 +24,7 @@ type Tree struct {
 //
 // The encoded form is three lines, each ending in a newline (U+000A):
 //
-//	go.sum database tree
+//	tlog database tree
 //	N
 //	Hash
 //
@@ -33,9 +33,9 @@ type Tree struct {
 // A future backwards-compatible encoding may add additional lines,
 // which the parser can ignore.
 // A future backwards-incompatible encoding would use a different
-// first line (for example, "go.sum database tree v2").
+// first line (for example, "tlog database tree v2").
 func FormatTree(tree Tree) []byte {
-	return []byte(fmt.Sprintf("go.sum database tree\n%d\n%s\n", tree.N, tree.Hash))
+	return []byte(fmt.Sprintf("tlog database tree\n%d\n%s\n", tree.N, tree.Hash))
 }
 
 var errMalformedTree = errors.New("malformed tree note")
@@ -45,7 +45,7 @@ var treePrefix = []byte("tlog database tree\n")
 func ParseTree(text []byte) (tree Tree, err error) {
 	// The message looks like:
 	//
-	//	go.sum database tree
+	//	tlog database tree
 	//	2
 	//	nND/nri/U0xuHUrYSy0HtMeal2vzD9V4k/BO79C+QeI=
 	//
