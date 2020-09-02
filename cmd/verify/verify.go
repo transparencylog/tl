@@ -17,7 +17,7 @@ import (
 
 var VerifyCmd = &cobra.Command{
 	Use:   "verify [URL] [file]",
-	Short: "Verify the contents of a locally downloaded file with the asset tranparency log",
+	Short: "Verify the contents of a locally downloaded file with the asset transparency log",
 
 	Args: cobra.ExactArgs(2),
 
