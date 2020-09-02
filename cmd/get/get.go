@@ -18,7 +18,7 @@ import (
 
 var GetCmd = &cobra.Command{
 	Use:   "get [URL]",
-	Short: "Download a URL to a local file and verify the contents with the asset tranparency log",
+	Short: "Download a URL to a local file and verify the contents with the asset transparency log",
 
 	Args: cobra.ExactArgs(1),
 

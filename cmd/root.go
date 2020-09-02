@@ -29,7 +29,7 @@ import (
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "tl",
-	Short: "Validate asset downloads against a public tranparency log ",
+	Short: "Validate asset downloads against a public transparency log ",
 	Long: `tl validates assets (software downloads, documents, etc) downloaded from
 https:// URLs with a cryptographic integrity validation. The public
 transparency log tl uses provides users an assurance that the cryptographic

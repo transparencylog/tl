@@ -18,7 +18,7 @@ import (
 
 var CatCmd = &cobra.Command{
 	Use:   "cat [URL]",
-	Short: "Cat the contents of a URL only if the contents can be verified with the asset tranparency log",
+	Short: "Cat the contents of a URL only if the contents can be verified with the asset transparency log",
 
 	Args: cobra.ExactArgs(1),
 
