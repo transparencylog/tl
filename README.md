@@ -2,7 +2,7 @@
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/transparencylog/tl)](https://goreportcard.com/report/github.com/transparencylog/tl)
 
-**Alpha Warning**: tl works as described but has minimal testing, no peer review, and no load testing. Please test the tool and provide feedback.
+**Beta Warning**: tl works as described but hasn't had a security review, and has minimal load testing. Please test the tool and provide feedback.
 
 `tl` verifies the contents of URLs against a publicly recorded cryptographic log. `tl` is flexible and can download, print, or verify existing files.
 
