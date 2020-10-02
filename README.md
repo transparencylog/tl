@@ -47,11 +47,11 @@ curl -L $URL -o $FILE
 `tl` also implements a cat subcommand for doing things like installing from a shell script:
 
 ```
-tl cat https://raw.githubusercontent.com/Homebrew/install/master/install.sh | bash
+tl cat https://raw.githubusercontent.com/Homebrew/install/fea1e80d/install.sh | bash
 ```
 
 ## Frequently Asked Questions (FAQ)
 
-The [FAQ](https://www.transparencylog.com/frequently-asked-questions/) 
+The [FAQ](https://www.transparencylog.com/frequently-asked-questions/)
 covers topics like: Why not use blockchain? Does this replace GPG? What
 attacks could this mitigate?
