@@ -1,3 +1,9 @@
+**Project Archived**
+
+This project is archived at the transparency log service at https://beta.transparencylog.net will be shutoff on November 9th.
+
+If you are looking for an assest signing and verification system that is backed by a transparency log checkout the [sigstore/cosign](https://github.com/sigstore/cosign) project. In particular they have a subcommand called [sget](https://github.com/sigstore/cosign#blobs) that offers a sort of similar guarantee although not across any arbitrary URL.
+
 # tl
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/transparencylog/tl)](https://goreportcard.com/report/github.com/transparencylog/tl)
